@@ -1,0 +1,105 @@
+---
+- name: Apply Oracle Patches
+  hosts: ora-servers
+  gather_facts: true
+  become: true
+  become_user: '{{ oracle_user }}'
+
+  vars:
+    oracle_apply_patches_manage_monitoring: false
+    oracle_apply_patches_manage_cron_jobs: false
+    oracle_apply_patches_downtime_duration: '3h'
+    oracle_apply_patches_single_host_mode: true
+
+  tasks:
+
+  - name: Check a single host mode
+    assert:
+      that:
+        - "play_hosts|length == 1"
+      fail_msg: "This is a 'single host' mode, but more than one host seems to be in the current play"
+    run_once: true
+    when: oracle_apply_patches_single_host_mode
+    tags:
+      - oracle_apply_patches_precheck
+      - always
+
+  - import_role:
+      name: oracle-gatherinfo-gi
+    tags:
+      - oracle-gatherinfo-gi
+      - oracle-gatherinfo-allcomponents
+
+  - import_role:
+      name: oracle-gatherinfo-databases
+    tags:
+      - oracle-gatherinfo-databases
+      - oracle-gatherinfo-allcomponents
+
+  - import_role:
+      name: oracle-gatherinfo-listener
+    tags:
+      - oracle-gatherinfo-listener
+      - oracle-gatherinfo-allcomponents
+
+  - import_role:
+      name: oracle-gatherinfo-dbconsole
+    tags:
+      - oracle-gatherinfo-dbconsole
+      - oracle-gatherinfo-allcomponents
+
+  - include_role:
+      name: oracle-host-cron
+    vars:
+      oracle_host_cron_copy_scripts: false
+      oracle_host_cron_disable_jobs: true
+      oracle_host_cron_manage_cron_jobs: '{{ oracle_apply_patches_manage_cron_jobs }}'
+    when: oracle_apply_patches_manage_cron_jobs
+    tags:
+      - oracle_disable_cron_jobs
+
+  - include_tasks: monitoring_set_downtime.yml
+    with_items:
+      - '{{ inventory_hostname }}'
+      - '{{ oracle_gi_info.rac_remote_nodes }}'
+    loop_control:
+      label: "[host: {{ _oracle_apply_patches_host_outer_item }}]"
+      loop_var: _oracle_apply_patches_host_outer_item
+    when: oracle_apply_patches_manage_monitoring
+    tags:
+      - nacl_manage_checks_set_downtime
+
+  - import_role:
+      name: oracle-manage-patches
+    vars:
+      oracle_manage_patches_task: apply
+      oracle_manage_patches_patch_type:
+      oracle_manage_patches_patch_name:
+#      oracle_manage_patches_patch_type: ojvmgicombo
+#      oracle_manage_patches_patch_type: ojvmdbcombo
+#      oracle_manage_patches_patch_type: oneoff
+#      oracle_manage_patches_patch_name: OCT2018
+    tags:
+      - oracle-manage-patches
+
+  - include_tasks: monitoring_cancel_downtime.yml
+    with_items:
+      - '{{ inventory_hostname }}'
+      - '{{ oracle_gi_info.rac_remote_nodes }}'
+    loop_control:
+      label: "[host: {{ _oracle_apply_patches_host_outer_item }}]"
+      loop_var: _oracle_apply_patches_host_outer_item
+    when: oracle_apply_patches_manage_monitoring
+    tags:
+      - nacl_manage_checks_cancel_downtime
+
+  - include_role:
+      name: oracle-host-cron
+    vars:
+      oracle_host_cron_copy_scripts: false
+      oracle_host_cron_disable_jobs: false
+      oracle_host_cron_manage_cron_jobs: '{{ oracle_apply_patches_manage_cron_jobs }}'
+    when: oracle_apply_patches_manage_cron_jobs
+    tags:
+      - oracle_enable_cron_jobs
+

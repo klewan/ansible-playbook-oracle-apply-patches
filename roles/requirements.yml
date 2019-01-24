@@ -1,0 +1,85 @@
+
+- name: oracle
+  src: https://github.com/klewan/ansible-role-oracle.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-gatherinfo-gi
+  src: https://github.com/klewan/ansible-role-oracle-gatherinfo-gi.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-gatherinfo-databases
+  src: https://github.com/klewan/ansible-role-oracle-gatherinfo-databases.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-gatherinfo-dbconsole
+  src: https://github.com/klewan/ansible-role-oracle-gatherinfo-dbconsole.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-gatherinfo-listener
+  src: https://github.com/klewan/ansible-role-oracle-gatherinfo-listener.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: nacl-manage-checks
+  src: https://github.com/klewan/ansible-role-nacl-manage-checks.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-asm-metadata
+  src: https://github.com/klewan/ansible-role-oracle-asm-metadata.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-homes-backup
+  src: https://github.com/klewan/ansible-role-oracle-homes-backup.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-host-cron
+  src: https://github.com/klewan/ansible-role-oracle-host-cron.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-manage-dbstate
+  src: https://github.com/klewan/ansible-role-oracle-manage-dbstate.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-download-patches
+  src: https://github.com/klewan/ansible-role-oracle-download-patches.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+
+- name: oracle-manage-patches
+  src: https://github.com/klewan/ansible-role-oracle-gatherinfo-listener.git
+  scm: git
+  #version: develop
+  #version: feature/init
+  #version: master
+

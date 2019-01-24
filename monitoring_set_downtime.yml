@@ -1,0 +1,12 @@
+---
+
+- import_role:
+    name: nacl-manage-checks
+  vars:
+    nacl_manage_checks_command: Downtime
+    nacl_manage_checks_downtime_maintenance_option: '{{ oracle_apply_patches_downtime_duration }}'
+  delegate_to: '{{ _oracle_apply_patches_host_outer_item }}'
+  tags:
+    - nacl_manage_checks_set_downtime
+    - nacl_manage_checks
+
